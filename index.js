@@ -13,7 +13,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swaggerConfig.js";
 
 const app = express();
-const port = process.env.PORT || 7000
+const port = process.env.PORT || 8000
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
