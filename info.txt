@@ -1,0 +1,28 @@
+-> index.js - set up express server, body parser
+-> db.js - set up mongodb
+-> model - define schema
+-> controller - logic for getting the requested data 
+-> router - route to interact with the server
+-> connect route in index.js
+
+
+कैलिफोर्निया बुरिटो
+बॉक्स8 - देसी भोजन
+चाइनीज वोक
+शिकागो पिज्जा
+डफ़ और क्रीम
+पंजाबी अंगीठी
+सबवे
+केएफसी
+बर्गर किंग
+मैकडॉनल्ड्स
+बेकिंगो
+बीकानेरवाला
+
+
+
+
+
+
+
+
