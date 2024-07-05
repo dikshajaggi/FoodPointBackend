@@ -237,34 +237,36 @@ export const getSpecificRest = async (req, res) => {
  *                 type: string
  *                 description: The ID of the restaurant.
  *                 example: "60c72b2f5f1b2c001c8e4c8b"
- *               dish:
- *                 type: object
- *                 description: The dish object to add to the menu.
- *                 properties:
- *                   name:
- *                     type: string
- *                     description: The name of the dish.
- *                     example: "Pizza"
- *                   description:
- *                     type: string
- *                     description: The description of the dish.
- *                     example: "Delicious pizza with cheese and toppings"
- *                   price:
- *                     type: number
- *                     description: The price of the dish.
- *                     example: 10.99
- *                   category:
- *                     type: string
- *                     description: The category of the dish.
- *                     example: "Main Course"
- *                   imageId:
- *                     type: string
- *                     description: The ID of the image associated with the dish.
- *                     example: "60c72b2f5f1b2c001c8e4c8d"
- *                   inStock:
- *                     type: number
- *                     description: The quantity of the dish in stock.
- *                     example: 20
+ *               dishes:
+ *                 type: array
+ *                 description: An array of dish objects to add to the menu.
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: The name of the dish.
+ *                       example: "Pizza"
+ *                     description:
+ *                       type: string
+ *                       description: The description of the dish.
+ *                       example: "Delicious pizza with cheese and toppings"
+ *                     price:
+ *                       type: number
+ *                       description: The price of the dish.
+ *                       example: 10.99
+ *                     category:
+ *                       type: string
+ *                       description: The category of the dish.
+ *                       example: "Main Course"
+ *                     imageId:
+ *                       type: string
+ *                       description: The ID of the image associated with the dish.
+ *                       example: "60c72b2f5f1b2c001c8e4c8d"
+ *                     inStock:
+ *                       type: number
+ *                       description: The quantity of the dish in stock.
+ *                       example: 20
  *     responses:
  *       '200':
  *         description: Menu items added successfully
@@ -277,19 +279,22 @@ export const getSpecificRest = async (req, res) => {
 
 export const addMenuItems = async (req, res) => {
   try {
-    const { id, dish } = req.body
-    const rest = await Restaurant.findOne({ id })
-    console.log(rest, "getting rest")
+    const { id, dishes } = req.body;
+    const rest = await Restaurant.findOne({ id });
+    console.log(rest, "getting rest");
     if (!rest) {
       return res.status(404).json({ success: false, message: 'Restaurant not found' });
     }
-    rest.menu.push(dish)
-    await rest.save()
-    res.status(200).json({ message: "dish added successfully" })
+    if (Array.isArray(dishes)) {
+      rest.menu.push(...dishes);
+      await rest.save();
+      res.status(200).json({ message: "Dishes added successfully" });
+    } else {
+      res.status(400).json({ message: "Dishes should be an array" });
+    }
+  } catch (error) {
+    console.log(error, "error");
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-  }
-  catch (error) {
-    console.log(error, "error")
-    res.status(500).json({ message: "internal server error" })
-  }
-}
