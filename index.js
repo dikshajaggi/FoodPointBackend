@@ -11,9 +11,9 @@ import SearchRoutes from "./routes/SearchRoutes.js"
 import OrderRoutes from "./routes/OrderRoutes.js"
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swaggerConfig.js";
-import { Server } from 'socket.io';
+// import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { orderSocket } from "./orderSocket.js";
+// import { orderSocket } from "./orderSocket.js";
 
 
 const app = express();
@@ -37,7 +37,7 @@ app.use('/api', SearchRoutes);
 app.use('/api', OrderRoutes);
 
 
-orderSocket(server)
+// orderSocket(server)
 connectDB().then(() => {
   console.log('MongoDB connected');
   server.listen(port, () => {
