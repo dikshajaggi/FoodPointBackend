@@ -3,12 +3,12 @@ import swaggerJSDoc from 'swagger-jsdoc'
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
-        title: 'Hunger Bites',
+        title: 'Food Point',
         version: '1.0.0',
-        description: 'Documentation for the APIs in Hunger Bites',
+        description: 'Documentation for the APIs in Food Point',
         contact: {
-            name: 'Shubham Sharma',
-            email: 'sharma.shubham2124@gmail.com'
+            name: 'Diksha Jaggi',
+            email: 'diksha2000may@gmail.com'
         }
     },
     servers: [
