@@ -24,7 +24,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://foodpoint24.netlify.app' }))
+app.use(cors({ origin: 'http://localhost:3001' }))
 app.get("/health", async (req, res) => {
   res.send({ message: "health OK!" });
 });
