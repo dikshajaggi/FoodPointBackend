@@ -13,7 +13,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: 'http://localhost:8000',
+            url: 'https://foodpointbackend-7mxm.onrender.com',
             description: 'Development server'
         }
     ],
