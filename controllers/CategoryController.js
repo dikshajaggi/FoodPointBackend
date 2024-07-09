@@ -1,81 +1,59 @@
 import Category from "../models/category.js"
 import Restaurant from "../models/restaurant.js";
+import multer from 'multer';
+import path  from 'path';
 
-/**
- * @swagger
- * /api/add-category:
- *   post:
- *     summary: Add a new category
- *     tags: 
- *       - Category
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 description: The name of the category
- *                 example: "Beverages"
- *               description:
- *                 type: string
- *                 description: A brief description of the category
- *                 example: "Various kinds of drinks"
- *               imageUrl:
- *                 type: string
- *                 description: URL of the category image
- *                 example: "http://example.com/image.jpg"
- *     responses:
- *       201:
- *         description: Category added successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "60c72b2f5f1b2c001c8e4c8f"
- *                 name:
- *                   type: string
- *                   example: "Beverages"
- *                 description:
- *                   type: string
- *                   example: "Various kinds of drinks"
- *                 imageUrl:
- *                   type: string
- *                   example: "http://example.com/image.jpg"
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Validation error: name is required"
- */
-
-/**
- * Add a new category.
- * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>}
- */
-
-export const addcategory = async (req, res) => {
-    try {
-        const newRestaurant = new Category(req.body);
-        await newRestaurant.save();
-        res.status(201).json(newRestaurant);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+// Set up storage engine
+const storage = multer.diskStorage({
+    destination: './uploads/', // Folder where images will be saved
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    },
+  });
+  
+  // Init upload
+  const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+      checkFileType(file, cb);
+    },
+  }).single('image'); // 'image' is the field name for the file
+  
+  // Check file type
+  function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb('Error: Images Only!');
     }
-}
+  }
+
+export const addCategory = async (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    try {
+      const { en, hn } = req.body;
+      const image = req.file ? req.file.path : '';
+
+      const newCategory = new Category({
+        en,
+        hn,
+        image,
+      });
+
+      await newCategory.save();
+      res.status(201).json(newCategory);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+};
 
 /**
  * @swagger
