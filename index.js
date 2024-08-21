@@ -9,10 +9,12 @@ import FavRestRoutes from "./routes/FavRestRoutes.js"
 import CategoryRoutes from "./routes/CategoryRoutes.js"
 import SearchRoutes from "./routes/SearchRoutes.js"
 import OrderRoutes from "./routes/OrderRoutes.js"
+import PaymentRoutes from "./routes/PaymentRoutes.js"
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swaggerConfig.js";
 // import { Server } from 'socket.io';
 import { createServer } from 'http';
+import Razorpay from "razorpay";
 // import { orderSocket } from "./orderSocket.js";
 
 
@@ -20,11 +22,17 @@ const app = express();
 const port = process.env.PORT || 8000
 const server = createServer(app);
 
+export const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
+})
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(cors({ origin: 'https://foodpoint24.netlify.app' }))
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cors({ origin: 'http://localhost:3000' }))
 app.get("/health", async (req, res) => {
   res.send({ message: "health OK!" });
 });
@@ -35,6 +43,7 @@ app.use('/api', FavRestRoutes);
 app.use('/api', CategoryRoutes);
 app.use('/api', SearchRoutes);
 app.use('/api', OrderRoutes);
+app.use('/api', PaymentRoutes);
 
 
 // orderSocket(server)
