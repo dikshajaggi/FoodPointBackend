@@ -9,7 +9,6 @@ const orderItemSchema = new mongoose.Schema({
     city: { type: String, required: true },
     state: { type: String, required: true },
     contact: { type: Number, required: true },
-    cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart', required: true },
     items: [
         {
             menu: {
